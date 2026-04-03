@@ -1,0 +1,29 @@
+name: workflow.yml
+on: # 워크폴로우 실행 조건
+  push: # 푸시가 발생하는 시점에
+    branches: # 푸시가 발생한 브랜치가
+      - main   # 메인 브랜치에서
+
+jobs: # 실행할 작업(job) 정의
+  build: # build 작업 설정
+    runs-on: ubuntu-latest # 실행 환경 설정(build라는 job이 해당 환경에서 실행됨)
+    env: # 환경 변수 추가
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+    steps: # job안에서 실행될 단계
+      - uses: actions/checkout@v6 #현재 레포의 코드를 checkout함(가져옴)
+
+      - name: JDK 17 설정
+        uses: actions/setup-java@v5
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          cache: 'gradle'
+
+      - name: 실행 권한 부여
+        run: chmod +x gradlew
+
+      - name: 빌드 및 테스트
+        run: ./gradlew clean build
+
+
+
